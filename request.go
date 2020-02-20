@@ -3,10 +3,10 @@ package requests
 import (
 	"bytes"
 	"encoding/xml"
+	"github.com/telanflow/requests/encode"
 	"io"
 	"net/http"
 	"net/url"
-	"requests/encode"
 	"strings"
 	"sync/atomic"
 	"time"

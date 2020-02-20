@@ -1,4 +1,4 @@
-module requests
+module github.com/telanflow/requests
 
 go 1.13
 

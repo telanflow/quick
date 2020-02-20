@@ -2,15 +2,13 @@ package main
 
 import (
 	"fmt"
-	"requests"
+	"github.com/telanflow/requests"
 )
 
 func main() {
-
-	resp, err := requests.Get("http://www.telan.me")
+	resp, err := requests.Get("http://www.baidu.com")
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(resp.ExecTime.Seconds())
+	fmt.Println(resp)
 }
