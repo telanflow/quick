@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"html"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -20,6 +21,9 @@ type Response struct {
 	Body          []byte
 	ContentLength int64
 	ExecTime      time.Duration // request exec time
+
+	i        int64 // current reading index
+	prevRune int   // index of previous rune; or < 0
 }
 
 func BuildResponse(resp *http.Response) (*Response, error) {
@@ -74,4 +78,14 @@ func (r *Response) String() string {
 
 func (r *Response) GetBody() []byte {
 	return r.Body
+}
+
+func (r *Response) Read(p []byte) (n int, err error) {
+	if r.i >= int64(len(r.Body)) {
+		return 0, io.EOF
+	}
+	r.prevRune = -1
+	n = copy(r.Body, r.Body[r.i:])
+	r.i += int64(n)
+	return
 }
