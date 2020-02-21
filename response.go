@@ -86,7 +86,7 @@ func (r *Response) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	r.prevRune = -1
-	n = copy(r.Body, r.Body[r.i:])
+	n = copy(p, r.Body[r.i:])
 	r.i += int64(n)
 	return
 }
