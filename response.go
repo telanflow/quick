@@ -21,9 +21,8 @@ type Response struct {
 	Body          []byte
 	ContentLength int64
 	ExecTime      time.Duration // request exec time
-
-	i        int64 // current reading index
-	prevRune int   // index of previous rune; or < 0
+	i             int64         // current reading index
+	prevRune      int           // index of previous rune; or < 0
 }
 
 func BuildResponse(resp *http.Response) (*Response, error) {
@@ -45,6 +44,8 @@ func BuildResponse(resp *http.Response) (*Response, error) {
 		Header:        CopyHeader(resp.Header),
 		Body:          body,
 		ContentLength: resp.ContentLength,
+		i:             0,
+		prevRune:      -1,
 	}, nil
 }
 

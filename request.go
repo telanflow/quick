@@ -38,7 +38,7 @@ func NewRequest(method, rawurl string) (*Request, error) {
 		Method:      method,
 		Header:      make(http.Header),
 		Body:        nil,
-		RedirectNum: 10,                 // set request redirect num. default 10.
+		RedirectNum: 10, // set request redirect num. default 10.
 		Timeout:     30 * time.Second,
 		Proxy:       nil,
 		Cookies:     nil,
