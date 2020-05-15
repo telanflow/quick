@@ -1,4 +1,4 @@
-package requests
+package quick
 
 import (
 	"golang.org/x/net/publicsuffix"

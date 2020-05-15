@@ -1,4 +1,4 @@
-module github.com/telanflow/requests
+module github.com/telanflow/quick
 
 go 1.13
 

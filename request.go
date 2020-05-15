@@ -1,9 +1,9 @@
-package requests
+package quick
 
 import (
 	"bytes"
 	"encoding/xml"
-	"github.com/telanflow/requests/encode"
+	"github.com/telanflow/quick/encode"
 	"io"
 	"net/http"
 	"net/url"
@@ -205,8 +205,8 @@ func (req *Request) SetProxy(rawurl string) *Request {
 
 // set cookies to request
 // sample:
-// 		requests.SetCookies(
-//			requests.NewCookiesWithString("key1=value1; key2=value2; key3=value3")
+// 		quick.SetCookies(
+//			quick.NewCookiesWithString("key1=value1; key2=value2; key3=value3")
 //		)
 func (req *Request) SetCookies(cookies Cookies) *Request {
 	req.Cookies = cookies

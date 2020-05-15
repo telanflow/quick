@@ -1,4 +1,4 @@
-package requests
+package quick
 
 import (
 	jsoniter "github.com/json-iterator/go"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const UA = "Go library telanflow/requests"
+const UA = "Go library telanflow/quick"
 
 // default global session
 var defaultSession = NewSession()
@@ -83,6 +83,17 @@ func SetHeaderSingle(key, val string) *Session {
 // get global header single
 func GetHeaderSingle(key string) string {
 	return defaultSession.GetHeaderSingle(key)
+}
+
+// set global header
+func SetHeader(h http.Header) *Session {
+	defaultSession.Header = h
+	return defaultSession
+}
+
+// get global header
+func GetHeader() http.Header {
+	return defaultSession.Header
 }
 
 // set global user-agent

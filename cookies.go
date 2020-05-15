@@ -1,4 +1,4 @@
-package requests
+package quick
 
 import (
 	"net/http"
@@ -9,7 +9,7 @@ import (
 type Cookies = []*http.Cookie
 
 // You should init it by using NewCookiesWithString like this:
-// 	cookies := requests.NewCookiesWithString(
+// 	cookies := quick.NewCookiesWithString(
 //		"key1=value1; key2=value2; key3=value3"
 // 	)
 // Note: param is cookie string

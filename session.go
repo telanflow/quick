@@ -1,4 +1,4 @@
-package requests
+package quick
 
 import (
 	"context"
@@ -234,6 +234,17 @@ func (session *Session) GetHeaderSingle(key string) string {
 	return session.Header.Get(key)
 }
 
+// set global header
+func (session *Session) SetHeader(h http.Header) *Session {
+	session.Header = h
+	return session
+}
+
+// get global header
+func (session *Session) GetHeader() http.Header {
+	return session.Header
+}
+
 // set session global user-agent
 func (session *Session) SetUserAgent(ua string) *Session {
 	session.SetHeaderSingle("User-Agent", ua)
@@ -280,6 +291,30 @@ func (session *Session) SetCheckRedirectHandler(handler func(req *http.Request, 
 func (session *Session) SetCookieJar(jar http.CookieJar) *Session {
 	session.client.Jar = jar
 	return session
+}
+
+// returns the cookies of the given url in Session.
+func (session *Session) Cookies(rawurl string) Cookies {
+	if session.client.Jar == nil {
+		return nil
+	}
+	parsedURL, err := url.Parse(rawurl)
+	if err != nil {
+		return nil
+	}
+	return session.client.Jar.Cookies(parsedURL)
+}
+
+// set cookies of the url in Session.
+func (session *Session) SetCookies(rawurl string, cookies Cookies) {
+	if session.client.Jar == nil {
+		return
+	}
+	parsedURL, err := url.Parse(rawurl)
+	if err != nil {
+		return
+	}
+	session.client.Jar.SetCookies(parsedURL, cookies)
 }
 
 // request suck data
