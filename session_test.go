@@ -14,7 +14,7 @@ func TestNewSession(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(resp)
+	t.Log(resp.StatusCode)
 }
 
 func BenchmarkSession_Get(b *testing.B) {
@@ -44,16 +44,12 @@ func TestSession_Post(t *testing.T) {
 	session.SetCookieJar(cookieJar)
 	//session.SetProxy("http://127.0.0.1:8080")
 
-	req, err := NewRequest(http.MethodGet, BaiDuUrl)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	req := NewRequest().SetMethod(http.MethodGet).SetUrl(BaiDuUrl)
 	req.SetCookies(NewCookiesWithString("test=111111"))
 	resp, err := session.Suck(req)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Log(resp)
+	t.Log(resp.StatusCode)
 }

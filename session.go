@@ -79,10 +79,7 @@ func NewSession(options ...*SessionOptions) *Session {
 
 // get request
 func (session *Session) Get(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodGet, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodGet).SetUrl(rawurl)
 	if params != nil {
 		req.SetQueryString(getParam(params...))
 	}
@@ -91,10 +88,7 @@ func (session *Session) Get(rawurl string, params ...interface{}) (*Response, er
 
 // post request
 func (session *Session) Post(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodPost, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -103,10 +97,7 @@ func (session *Session) Post(rawurl string, params ...interface{}) (*Response, e
 
 // postForm request
 func (session *Session) PostFormData(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodPost, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
 	if params != nil {
 		req.SetBodyFormData(getParam(params...))
 	}
@@ -115,10 +106,7 @@ func (session *Session) PostFormData(rawurl string, params ...interface{}) (*Res
 
 // put request
 func (session *Session) Put(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodPut, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodPut).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -127,10 +115,7 @@ func (session *Session) Put(rawurl string, params ...interface{}) (*Response, er
 
 // head request
 func (session *Session) Head(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodHead, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodHead).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -139,10 +124,7 @@ func (session *Session) Head(rawurl string, params ...interface{}) (*Response, e
 
 // patch request
 func (session *Session) Patch(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodPatch, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodPatch).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -151,10 +133,7 @@ func (session *Session) Patch(rawurl string, params ...interface{}) (*Response, 
 
 // options request
 func (session *Session) Options(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodOptions, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodOptions).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -163,10 +142,7 @@ func (session *Session) Options(rawurl string, params ...interface{}) (*Response
 
 // delete request
 func (session *Session) Delete(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodDelete, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodDelete).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -175,10 +151,7 @@ func (session *Session) Delete(rawurl string, params ...interface{}) (*Response,
 
 // connect request
 func (session *Session) Connect(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodConnect, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodConnect).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -187,10 +160,7 @@ func (session *Session) Connect(rawurl string, params ...interface{}) (*Response
 
 // trace request
 func (session *Session) Trace(rawurl string, params ...interface{}) (*Response, error) {
-	req, err := NewRequest(http.MethodTrace, rawurl)
-	if err != nil {
-		return nil, err
-	}
+	req := NewRequest().SetMethod(http.MethodTrace).SetUrl(rawurl)
 	if params != nil {
 		req.SetBody(getParam(params...))
 	}
@@ -199,11 +169,7 @@ func (session *Session) Trace(rawurl string, params ...interface{}) (*Response, 
 
 // download file
 func (session *Session) Download(rawurl string, toFile string) error {
-	req, err := NewRequest(http.MethodGet, rawurl)
-	if err != nil {
-		return err
-	}
-
+	req := NewRequest().SetMethod(http.MethodGet).SetUrl(rawurl)
 	resp, err := session.Suck(req)
 	if err != nil {
 		return err

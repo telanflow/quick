@@ -26,23 +26,24 @@ type Request struct {
 	Timeout     time.Duration // request timeout
 	Proxy       *url.URL      // request proxy url
 	Cookies     Cookies       // request cookies
+
 	host        string        // customize the request Host field
+	queryString string		  // customize the GET request query string
 }
 
 // create a request instance
-func NewRequest(method, rawurl string) (*Request, error) {
-	method = strings.ToUpper(method)
+func NewRequest() *Request {
 	return &Request{
 		Id:          atomic.AddUint64(&sequenceNo, 1),
-		Url:         rawurl,
-		Method:      method,
+		Url:         "",
+		Method:      http.MethodGet,
 		Header:      make(http.Header),
 		Body:        nil,
 		RedirectNum: 10, // set request redirect num. default 10.
 		Timeout:     30 * time.Second,
 		Proxy:       nil,
 		Cookies:     nil,
-	}, nil
+	}
 }
 
 // set request url
@@ -54,6 +55,15 @@ func (req *Request) SetUrl(rawurl string) *Request {
 // get request url
 func (req *Request) GetUrl() string {
 	return req.Url
+}
+
+func (req *Request) SetMethod(method string) *Request {
+	req.Method = strings.ToUpper(method)
+	return req
+}
+
+func (req *Request) GetMethod() string {
+	return req.Method
 }
 
 // Custom request host field

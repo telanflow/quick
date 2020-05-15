@@ -6,10 +6,6 @@ import (
 )
 
 func TestNewRequest(t *testing.T) {
-	req, err := NewRequest(http.MethodGet, "http://www.baidu.com")
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	req := NewRequest().SetMethod(http.MethodGet).SetUrl("http://www.baidu.com")
 	t.Log(req)
 }

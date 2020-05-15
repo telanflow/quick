@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const UA = "Go library telanflow/quick"
+const UA = "the request for quick"
 
 // default global session
 var defaultSession = NewSession()
