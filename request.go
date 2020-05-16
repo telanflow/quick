@@ -27,8 +27,8 @@ type Request struct {
 	Proxy       *url.URL      // request proxy url
 	Cookies     Cookies       // request cookies
 
-	host        string        // customize the request Host field
-	queryString string		  // customize the GET request query string
+	host        string // customize the request Host field
+	queryString string // customize the GET request query string
 }
 
 // create a request instance
