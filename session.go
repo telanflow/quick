@@ -78,91 +78,91 @@ func NewSession(options ...*SessionOptions) *Session {
 }
 
 // get request
-func (session *Session) Get(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Get(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodGet).SetUrl(rawurl)
-	if params != nil {
-		req.SetQueryString(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // post request
-func (session *Session) Post(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Post(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // postForm request
-func (session *Session) PostFormData(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) PostFormData(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
-	if params != nil {
-		req.SetBodyFormData(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // put request
-func (session *Session) Put(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Put(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPut).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // head request
-func (session *Session) Head(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Head(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodHead).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // patch request
-func (session *Session) Patch(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Patch(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPatch).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // options request
-func (session *Session) Options(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Options(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodOptions).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // delete request
-func (session *Session) Delete(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Delete(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodDelete).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // connect request
-func (session *Session) Connect(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Connect(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodConnect).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }
 
 // trace request
-func (session *Session) Trace(rawurl string, params ...interface{}) (*Response, error) {
+func (session *Session) Trace(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodTrace).SetUrl(rawurl)
-	if params != nil {
-		req.SetBody(getParam(params...))
+	for _, option := range ops {
+		option(req)
 	}
 	return session.Suck(req)
 }

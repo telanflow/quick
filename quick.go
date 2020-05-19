@@ -16,53 +16,53 @@ var defaultSession = NewSession()
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // get request
-func Get(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Get(rawurl, params...)
+func Get(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Get(rawurl, ops...)
 }
 
 // post request
-func Post(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Post(rawurl, params...)
+func Post(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Post(rawurl, ops...)
 }
 
 // postForm request
-func PostFormData(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.PostFormData(rawurl, params)
+func PostFormData(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.PostFormData(rawurl, ops...)
 }
 
 // put request
-func Put(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Put(rawurl, params...)
+func Put(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Put(rawurl, ops...)
 }
 
 // head request
-func Head(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Head(rawurl, params...)
+func Head(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Head(rawurl, ops...)
 }
 
 // patch request
-func Patch(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Patch(rawurl, params...)
+func Patch(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Patch(rawurl, ops...)
 }
 
 // options request
-func Options(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Options(rawurl, params...)
+func Options(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Options(rawurl, ops...)
 }
 
 // delete request
-func Delete(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Delete(rawurl, params...)
+func Delete(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Delete(rawurl, ops...)
 }
 
 // connect request
-func Connect(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Connect(rawurl, params...)
+func Connect(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Connect(rawurl, ops...)
 }
 
 // trace request
-func Trace(rawurl string, params ...interface{}) (*Response, error) {
-	return defaultSession.Trace(rawurl, params...)
+func Trace(rawurl string, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Trace(rawurl, ops...)
 }
 
 // download file to save hard disk
@@ -138,3 +138,5 @@ func SetCookieJar(jar http.CookieJar) *Session {
 func Suck(req *Request) (*Response, error) {
 	return defaultSession.Suck(req)
 }
+
+
