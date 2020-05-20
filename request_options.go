@@ -4,13 +4,14 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // request option func
 type OptionFunc func(*Request)
 
 // set request header
-func HeaderOption(v interface{}) OptionFunc {
+func OptionHeader(v interface{}) OptionFunc {
 	hd := make(http.Header)
 
 	switch v.(type) {
@@ -40,40 +41,74 @@ func HeaderOption(v interface{}) OptionFunc {
 	}
 }
 
+// set an http header to request
+func OptionHeaderSingle(k, v string) OptionFunc {
+	return func(req *Request) {
+		req.SetHeaderSingle(k, v)
+	}
+}
+
 // request query string for get
-func QueryStringOption(v interface{}) OptionFunc {
+func OptionQueryString(v interface{}) OptionFunc {
 	return func(req *Request) {
 		req.SetQueryString(v)
 	}
 }
 
 // request body for post
-func BodyOption(v interface{}) OptionFunc {
+func OptionBody(v interface{}) OptionFunc {
 	return func(req *Request) {
 		req.SetBody(v)
 	}
 }
 
 // request body for post (FormData)
-func BodyFormDataOption(v interface{}) OptionFunc {
+func OptionBodyFormData(v interface{}) OptionFunc {
 	return func(req *Request) {
 		req.SetBodyFormData(v)
 	}
 }
 
 // set proxy for request
-func ProxyOption(v interface{}) OptionFunc {
-	var rawurl string
+func OptionProxy(v interface{}) OptionFunc {
 	switch v.(type) {
 	case string:
-		rawurl = v.(string)
+		rawurl := v.(string)
+		return func(req *Request) {
+			req.SetProxy(rawurl)
+		}
 	case *url.URL:
 		u := v.(*url.URL)
-		rawurl = u.String()
+		return func(req *Request) {
+			req.Proxy = u
+		}
+	case url.URL:
+		u := v.(url.URL)
+		return func(req *Request) {
+			req.Proxy = &u
+		}
 	default:
 		panic("Proxy: parameter types are not supported")
 	}
+}
+
+// set timeout to request
+func OptionTimeout(v time.Duration) OptionFunc {
 	return func(req *Request) {
-		req.SetProxy(rawurl)
+		req.Timeout = v
+	}
+}
+
+// set redirect num to request
+func OptionRedirectNum(num int) OptionFunc {
+	return func(req *Request) {
+		req.RedirectNum = num
+	}
+}
+
+// set cookies to request
+func OptionCookies(cookies Cookies) OptionFunc {
+	return func(req *Request) {
+		req.Cookies = cookies
 	}
 }

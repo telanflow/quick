@@ -67,11 +67,8 @@ func NewSession(options ...*SessionOptions) *Session {
 	}
 
 	// Set default user agent
-	header := make(http.Header)
-	header.Add("User-Agent", UA)
-
 	return &Session{
-		Header:    header,
+		Header:    make(http.Header),
 		client:    client,
 		transport: transport,
 	}
@@ -80,91 +77,61 @@ func NewSession(options ...*SessionOptions) *Session {
 // get request
 func (session *Session) Get(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodGet).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // post request
 func (session *Session) Post(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // postForm request
 func (session *Session) PostFormData(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPost).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // put request
 func (session *Session) Put(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPut).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // head request
 func (session *Session) Head(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodHead).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // patch request
 func (session *Session) Patch(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodPatch).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // options request
 func (session *Session) Options(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodOptions).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // delete request
 func (session *Session) Delete(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodDelete).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // connect request
 func (session *Session) Connect(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodConnect).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // trace request
 func (session *Session) Trace(rawurl string, ops ...OptionFunc) (*Response, error) {
 	req := NewRequest().SetMethod(http.MethodTrace).SetUrl(rawurl)
-	for _, option := range ops {
-		option(req)
-	}
-	return session.Suck(req)
+	return session.Suck(req, ops...)
 }
 
 // download file
@@ -284,7 +251,10 @@ func (session *Session) SetCookies(rawurl string, cookies Cookies) {
 }
 
 // request suck data
-func (session *Session) Suck(req *Request) (*Response, error) {
+func (session *Session) Suck(req *Request, ops ...OptionFunc) (*Response, error) {
+	for _, option := range ops {
+		option(req)
+	}
 	return transmission(session, req)
 }
 

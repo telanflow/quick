@@ -27,8 +27,7 @@ type Request struct {
 	Proxy       *url.URL      // request proxy url
 	Cookies     Cookies       // request cookies
 
-	host        string // customize the request Host field
-	queryString string // customize the GET request query string
+	host string // customize the request Host field
 }
 
 // create a request instance
@@ -39,7 +38,7 @@ func NewRequest() *Request {
 		Method:      http.MethodGet,
 		Header:      make(http.Header),
 		Body:        nil,
-		RedirectNum: 10, // set request redirect num. default 10.
+		RedirectNum: DefaultRedirectNum, // set request redirect num. default 10.
 		Timeout:     30 * time.Second,
 		Proxy:       nil,
 		Cookies:     nil,
@@ -64,6 +63,15 @@ func (req *Request) SetMethod(method string) *Request {
 
 func (req *Request) GetMethod() string {
 	return req.Method
+}
+
+func (req *Request) SetTimeout(t time.Duration) *Request {
+	req.Timeout = t
+	return req
+}
+
+func (req *Request) GetTimeout(t time.Duration) time.Duration {
+	return req.Timeout
 }
 
 // Custom request host field

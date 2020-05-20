@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-const UA = "the request for quick"
-
 // default global session
 var defaultSession = NewSession()
 
@@ -135,8 +133,6 @@ func SetCookieJar(jar http.CookieJar) *Session {
 }
 
 // request suck data
-func Suck(req *Request) (*Response, error) {
-	return defaultSession.Suck(req)
+func Suck(req *Request, ops ...OptionFunc) (*Response, error) {
+	return defaultSession.Suck(req, ops...)
 }
-
-

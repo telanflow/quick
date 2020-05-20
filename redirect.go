@@ -4,8 +4,12 @@ import (
 	"net/http"
 )
 
-// request context redirect num key name
-const ContextRedirectNumKey = "redirectNum"
+const (
+	// default redirect num
+	DefaultRedirectNum = 10
+	// request context redirect num key name
+	ContextRedirectNumKey = "redirectNum"
+)
 
 // redirectFunc get redirectNum from request context and check redirect number.
 func redirectFunc(req *http.Request, via []*http.Request) error {
