@@ -14,17 +14,15 @@ type OptionFunc func(*Request)
 func OptionHeader(v interface{}) OptionFunc {
 	hd := make(http.Header)
 
-	switch v.(type) {
+	switch t := v.(type) {
 	case http.Header:
-		hd = v.(http.Header)
+		hd = t
 	case map[string]string:
-		dict := v.(map[string]string)
-		for k, v := range dict {
+		for k, v := range t {
 			hd.Set(k, v)
 		}
 	case []string:
-		l := v.([]string)
-		for _, v := range l {
+		for _, v := range t {
 			arr := strings.Split(v, ":")
 			if len(arr) == 2 {
 				hd.Set(strings.TrimSpace(arr[0]), strings.TrimSpace(arr[1]))
@@ -71,21 +69,18 @@ func OptionBodyFormData(v interface{}) OptionFunc {
 
 // set proxy for request
 func OptionProxy(v interface{}) OptionFunc {
-	switch v.(type) {
+	switch t := v.(type) {
 	case string:
-		rawurl := v.(string)
 		return func(req *Request) {
-			req.SetProxy(rawurl)
+			req.SetProxy(t)
 		}
 	case *url.URL:
-		u := v.(*url.URL)
 		return func(req *Request) {
-			req.Proxy = u
+			req.Proxy = t
 		}
 	case url.URL:
-		u := v.(url.URL)
 		return func(req *Request) {
-			req.Proxy = &u
+			req.Proxy = &t
 		}
 	default:
 		panic("Proxy: parameter types are not supported")

@@ -255,6 +255,7 @@ func (session *Session) Suck(req *Request, ops ...OptionFunc) (*Response, error)
 	for _, option := range ops {
 		option(req)
 	}
+
 	return transmission(session, req)
 }
 
@@ -280,7 +281,7 @@ func transmission(session *Session, req *Request) (*Response, error) {
 	// set redirectNum to request context.
 	ctx = context.WithValue(ctx, ContextRedirectNumKey, req.RedirectNum)
 
-	httpRequest, err := http.NewRequestWithContext(ctx, req.Method, req.Url, req.Body)
+	httpRequest, err := http.NewRequestWithContext(ctx, req.Method, req.URL.String(), req.Body)
 	if err != nil {
 		return nil, err
 	}

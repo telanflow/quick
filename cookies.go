@@ -25,8 +25,8 @@ func NewCookiesWithString(rawstr string) Cookies {
 			continue
 		}
 		cookies = append(cookies, &http.Cookie{
-			Name:  cookie[0],
-			Value: cookie[1],
+			Name:  strings.TrimSpace(cookie[0]),
+			Value: strings.TrimSpace(cookie[1]),
 		})
 	}
 	return cookies

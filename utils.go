@@ -43,11 +43,3 @@ func MergeQueryParams(parsedURL *url.URL, parsedQuery string) (*url.URL, error) 
 	}
 	return u, nil
 }
-
-// get first interface
-func getParam(params ...interface{}) interface{} {
-	if params == nil || len(params) == 0 {
-		return nil
-	}
-	return params[0]
-}
