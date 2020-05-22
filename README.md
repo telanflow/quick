@@ -2,9 +2,9 @@
 
 [![GoDoc](https://godoc.org/github.com/telanflow/quick?status.svg)](https://godoc.org/github.com/telanflow/quick)
 
-Http request library for Go
+Simple and efficient HTTP request library
 
-快速简单的Http请求库
+简单高效的Http请求库
 
 ## examples
 
@@ -47,14 +47,14 @@ func main() {
     
     // request
     resp, err := quick.Get(
-        "example.com?bb=1", 
+        "http://example.com?bb=1", 
         quick.OptionQueryString("name=quick&aa=11"), // set Get params   eg. "example.com?bb=1&name=quick&aa=11"
-        quick.OptionProxy("http://127.0.0.1:8080"),  // set proxy 
         quick.OptionHeaderSingle("User-Agent", ""),  // set http header
         quick.OptionHeader(http.Header{}),           // set http header  eg. http.Header || map[string]string || []string
         quick.OptionRedirectNum(10),                 // set redirect num
         quick.OptionCookies(cookies),                // set cookies to request
-        // quick.OptionBody(""),                     // POST body
+        // quick.OptionProxy("http://127.0.0.1:8080"), // set proxy address
+        // quick.OptionBody(""),                       // POST body
         // ... quick.Option
     )
     if err != nil {
@@ -86,7 +86,7 @@ func main() {
     session.InsecureSkipVerify(true)
     // set cookieJar
     session.SetCookieJar(cookieJar) 
-    resp, err := session.Get("example.com")
+    resp, err := session.Get("http://example.com")
     if err != nil {
         panic(err)
     }
@@ -102,9 +102,10 @@ Other example:
 ```go
 func main() {
     // new Request
-    req := quick.NewRequest().SetUrl("example.com").SetMethod(http.MethodGet)
+    req := quick.NewRequest().SetUrl("http://example.com").SetMethod(http.MethodGet)
 
     // send Request
+    session := quick.NewSession()
     resp, err = session.Suck(
         req, 
         quick.OptionHeaderSingle("User-Agent", ""), // set http header
