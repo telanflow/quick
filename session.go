@@ -6,13 +6,12 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"net/http/cookiejar"
 	"net/url"
 	"strings"
 	"time"
-
-	"golang.org/x/net/publicsuffix"
 )
+
+type HandlerFunc func(r *http.Request) *http.Response
 
 type Session struct {
 	Header     http.Header
@@ -20,7 +19,7 @@ type Session struct {
 	Timeout    time.Duration
 	transport  *http.Transport
 	client     *http.Client
-	middleware []func()
+	middleware []HandlerFunc
 }
 
 func NewSession(options ...*SessionOptions) *Session {
@@ -56,10 +55,7 @@ func NewSession(options ...*SessionOptions) *Session {
 
 	// set CookieJar
 	if sessionOptions.DisableCookieJar == false {
-		cookieJarOptions := cookiejar.Options{
-			PublicSuffixList: publicsuffix.List,
-		}
-		jar, err := cookiejar.New(&cookieJarOptions)
+		jar, err := NewCookieJar()
 		if err != nil {
 			return nil
 		}
@@ -248,6 +244,12 @@ func (session *Session) SetCookies(rawurl string, cookies Cookies) {
 		return
 	}
 	session.client.Jar.SetCookies(parsedURL, cookies)
+}
+
+// use middleware handler
+func (session *Session) Use(middleware ...HandlerFunc) *Session {
+	session.middleware = append(session.middleware, middleware...)
+	return session
 }
 
 // request suck data
