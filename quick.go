@@ -136,3 +136,8 @@ func SetCookieJar(jar http.CookieJar) *Session {
 func Suck(req *Request, ops ...OptionFunc) (*Response, error) {
 	return defaultSession.Suck(req, ops...)
 }
+
+// send http.Request
+func Do(req *http.Request) (*Response, error) {
+	return defaultSession.Do(req)
+}

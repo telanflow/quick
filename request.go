@@ -108,7 +108,7 @@ func (req *Request) SetQueryString(params interface{}) *Request {
 	}
 
 	// format get request parameters
-	u, err := MergeQueryParams(req.URL, buff.String())
+	u, err := MergeQueryString(req.URL, buff.String())
 	if err != nil {
 		panic(err)
 	}
@@ -292,7 +292,7 @@ func (req *Request) Copy() *Request {
 		Id:          req.Id,
 		URL:         copyURL,
 		Method:      req.Method,
-		Header:      req.Header,
+		Header:      CopyHeader(req.Header),
 		Body:        copyBody,
 		RedirectNum: req.RedirectNum,
 		Timeout:     req.Timeout,

@@ -252,11 +252,66 @@ func (session *Session) SetCookies(rawurl string, cookies Cookies) {
 
 // request suck data
 func (session *Session) Suck(req *Request, ops ...OptionFunc) (*Response, error) {
+	// Apply the HTTP request options
 	for _, option := range ops {
 		option(req)
 	}
 
 	return transmission(session, req)
+}
+
+// send http.Request
+func (session *Session) Do(req *http.Request) (*Response, error) {
+	// Set timeout to request context.
+	// Default timeout is 30s.
+	timeout := time.Second * 30
+	if session.Timeout > 0 {
+		timeout = session.Timeout
+	}
+	ctx, timeoutCancel := context.WithTimeout(context.Background(), timeout)
+
+	if session.Proxy != nil {
+		ctx = context.WithValue(ctx, ContextProxyKey, session.Proxy)
+	}
+
+	// set redirectNum to request context.
+	ctx = context.WithValue(ctx, ContextRedirectNumKey, DefaultRedirectNum)
+
+	req = req.WithContext(ctx)
+
+	// merge request header and session header
+	req.Header = MergeHeaders(session.Header, req.Header)
+
+	// start request time
+	startTime := time.Now()
+
+	// http.Client send request
+	httpResponse, err := session.client.Do(req)
+	if err != nil {
+		// check timeout error
+		if strings.Contains(err.Error(), "context deadline exceeded") {
+			return nil, WrapErr(ErrTimeout, err.Error())
+		}
+		return nil, WrapErr(err, "Request Error")
+	}
+	defer func() {
+		if err := httpResponse.Body.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	resp, err := BuildResponse(httpResponse)
+	if err != nil {
+		return nil, WrapErr(err, "build Response Error")
+	}
+
+	// request exec time
+	resp.ExecTime = time.Now().Sub(startTime)
+
+	// cancel the timeout context after request successed.
+	timeoutCancel()
+
+	return resp, nil
 }
 
 // send the request
