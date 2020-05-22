@@ -106,7 +106,7 @@ func main() {
 
     // send Request
     session := quick.NewSession()
-    resp, err = session.Suck(
+    resp, err := session.Suck(
         req, 
         quick.OptionHeaderSingle("User-Agent", ""), // set http header
         // ... quick.Option
