@@ -1,55 +1,74 @@
 package quick
 
 import (
+	"github.com/stretchr/testify/assert"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
-const BaiDuUrl = "http://www.baidu.com"
+func RunServer() *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("quick", "hd")
+		_, _ = w.Write([]byte("quick"))
+	}))
+}
 
-func TestNewSession(t *testing.T) {
-	session := NewSession()
-	//session.SetProxy("http://127.0.0.1:8080")
-	resp, err := session.Get(BaiDuUrl)
+func TestSession_Get(t *testing.T) {
+	ser := RunServer()
+	defer ser.Close()
+
+	resp, err := NewSession().Get(ser.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(resp.StatusCode)
+
+	asserts := assert.New(t)
+	asserts.Equal(resp.StatusCode, 200)
+	asserts.Equal(resp.Body.String(), "quick")
+	asserts.Equal(resp.Header.Get("quick"), "hd")
 }
 
 func BenchmarkSession_Get(b *testing.B) {
+	ser := RunServer()
+	defer ser.Close()
+
 	session := NewSession()
+
 	for i := 0; i < b.N; i++ {
-		_, _ = session.Get(BaiDuUrl)
+		_, _ = session.Get(ser.URL)
 	}
 }
 
 func BenchmarkSession_Get_Parallel(b *testing.B) {
+	ser := RunServer()
+	defer ser.Close()
 	session := NewSession()
-	//session.SetProxy("http://127.0.0.1:8080")
+
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			_, _ = session.Get(BaiDuUrl)
+			_, _ = session.Get(ser.URL)
 		}
 	})
 }
 
 func TestSession_Post(t *testing.T) {
-	cookieJar, err := NewCookieJar()
-	if err != nil {
-		t.Fatal(err)
-	}
+	asserts := assert.New(t)
 
+	ser := RunServer()
+	defer ser.Close()
+
+	cookieJar, _ := NewCookieJar()
 	session := NewSession()
 	session.SetCookieJar(cookieJar)
-	//session.SetProxy("http://127.0.0.1:8080")
 
-	req := NewRequest().SetMethod(http.MethodGet).SetUrl(BaiDuUrl)
+	req := NewRequest().SetMethod(http.MethodGet).SetUrl(ser.URL)
 	req.SetCookies(NewCookiesWithString("test=111111"))
+
 	resp, err := session.Suck(req)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Log(resp.StatusCode)
+	asserts.Equal(resp.StatusCode, 200)
 }
