@@ -307,6 +307,9 @@ func (session *Session) Do(req *http.Request) (*Response, error) {
 	// merge request header and session header
 	req.Header = MergeHeaders(session.Header, req.Header)
 
+	// middleware
+	session.next(req)
+
 	// start request time
 	startTime := time.Now()
 
