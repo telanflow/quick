@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type HandlerFunc func(r *http.Request) *http.Response
+type HandlerFunc func(r *http.Request)
 
 type Session struct {
 	Header     http.Header
@@ -20,6 +20,7 @@ type Session struct {
 	transport  *http.Transport
 	client     *http.Client
 	middleware []HandlerFunc
+	i			int
 }
 
 func NewSession(options ...*SessionOptions) *Session {
@@ -67,6 +68,8 @@ func NewSession(options ...*SessionOptions) *Session {
 		Header:    make(http.Header),
 		client:    client,
 		transport: transport,
+		middleware: make([]HandlerFunc, 0),
+		i: 0,
 	}
 }
 
@@ -252,6 +255,26 @@ func (session *Session) Use(middleware ...HandlerFunc) *Session {
 	return session
 }
 
+// next middleware
+func (session *Session) next(r *http.Request) {
+	current := session.i
+	n := len(session.middleware)
+	session.i++
+	if current >= n {
+		return
+	}
+
+	task := session.middleware[current]
+	if task == nil {
+		return
+	}
+
+	// handler
+	task(r)
+
+	session.next(r)
+}
+
 // request suck data
 func (session *Session) Suck(req *Request, ops ...OptionFunc) (*Response, error) {
 	// Apply the HTTP request options
@@ -362,6 +385,9 @@ func transmission(session *Session, req *Request) (*Response, error) {
 
 	// merge request header and session header
 	httpRequest.Header = MergeHeaders(session.Header, httpRequest.Header)
+
+	// middleware
+	session.next(httpRequest)
 
 	// start request time
 	startTime := time.Now()

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/telanflow/quick"
+	"log"
 	"net/http"
 )
 
@@ -26,6 +27,27 @@ func main() {
 	// set UserAgent to request
 	quick.SetHeaderSingle("User-Agent", "A go request libraries for quick")
 	quick.SetUserAgent("A go request libraries for quick")
+
+	// use middleware
+	quick.Use(
+		func(r *http.Request) {
+			log.Printf(
+				"Middleware: %v RedirectNum: %v Proxy: %v \n",
+				r.URL,
+				r.Context().Value(quick.ContextRedirectNumKey),
+				r.Context().Value(quick.ContextProxyKey),
+			)
+		},
+
+		func(r *http.Request) {
+			log.Printf(
+				"Middleware2: %v RedirectNum: %v Proxy: %v \n",
+				r.URL,
+				r.Context().Value(quick.ContextRedirectNumKey),
+				r.Context().Value(quick.ContextProxyKey),
+			)
+		},
+	)
 
 	// You should init it by using NewCookiesWithString like this:
 	// 	cookies := quick.NewCookiesWithString(

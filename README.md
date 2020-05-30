@@ -122,6 +122,54 @@ func main() {
 }
 ```
 
+## Middleware（中间件）
+```go
+func main() {
+    // new Request
+    req := quick.NewRequest().SetUrl("http://example.com").SetMethod(http.MethodGet)
+
+    // create session
+    session := quick.NewSession()
+
+    // use middleware
+    session.Use(
+        // middleware 1
+        func(r *http.Request) {
+            log.Printf(
+                "Middleware: %v RedirectNum: %v Proxy: %v \n",
+                r.URL,
+                r.Context().Value(quick.ContextRedirectNumKey),
+                r.Context().Value(quick.ContextProxyKey),
+            )
+        },
+        // middleware 2
+        func(r *http.Request) {
+            log.Printf(
+                "Middleware2: %v RedirectNum: %v Proxy: %v \n",
+                r.URL,
+                r.Context().Value(quick.ContextRedirectNumKey),
+                r.Context().Value(quick.ContextProxyKey),
+            )
+        },
+    )
+
+    // send Request
+    resp, err := session.Suck(
+        req, 
+        quick.OptionHeaderSingle("User-Agent", ""), // set http header
+        // ... quick.Option
+    )
+    if err != nil {
+        panic(err)
+    }
+
+    //resp.Status       e.g. "200 OK"
+    //resp.StatusCode   e.g. 200
+    //... 
+    fmt.Println(resp)
+}
+```
+
 ## License
 
 [MIT](LICENSE)

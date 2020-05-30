@@ -132,6 +132,12 @@ func SetCookieJar(jar http.CookieJar) *Session {
 	return defaultSession.SetCookieJar(jar)
 }
 
+// use middleware handler
+func Use(middleware ...HandlerFunc) *Session {
+	defaultSession.Use(middleware...)
+	return defaultSession
+}
+
 // request suck data
 func Suck(req *Request, ops ...OptionFunc) (*Response, error) {
 	return defaultSession.Suck(req, ops...)
