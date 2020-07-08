@@ -288,16 +288,16 @@ func (req *Request) Copy() *Request {
 		copy(copyCookies, req.Cookies)
 	}
 
-	return &Request{
-		Id:          req.Id,
-		URL:         copyURL,
-		Method:      req.Method,
-		Header:      CopyHeader(req.Header),
-		Body:        copyBody,
-		RedirectNum: req.RedirectNum,
-		Timeout:     req.Timeout,
-		Proxy:       copyProxy,
-		Cookies:     copyCookies,
-		host:        req.host,
-	}
+	// Generate a new request.Id
+	newReq := NewRequest()
+	newReq.URL 			= copyURL
+	newReq.Method 		= req.Method
+	newReq.Header 		= CopyHeader(req.Header)
+	newReq.Body 		= copyBody
+	newReq.RedirectNum 	= req.RedirectNum
+	newReq.Timeout 		= req.Timeout
+	newReq.Proxy 		= copyProxy
+	newReq.Cookies 		= copyCookies
+	newReq.host 		= req.host
+	return newReq
 }
