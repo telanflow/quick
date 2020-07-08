@@ -64,7 +64,7 @@ func main() {
 		//quick.OptionHeaderSingle("User-Agent", ""),  // set http header
 		//quick.OptionHeader(http.Header{}),           // set http header  eg. http.Header || map[string]string || []string
 		//quick.OptionRedirectNum(10),                 // set redirect num
-		quick.OptionCookies(cookies),                // set cookies to request
+		quick.OptionCookies(cookies), // set cookies to request
 		// quick.OptionBody(""),                     // POST body
 		// ... quick.Option
 	)

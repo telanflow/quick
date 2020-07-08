@@ -20,7 +20,7 @@ type Session struct {
 	transport  *http.Transport
 	client     *http.Client
 	middleware []HandlerFunc
-	i			int
+	i          int
 }
 
 func NewSession(options ...*SessionOptions) *Session {
@@ -65,11 +65,11 @@ func NewSession(options ...*SessionOptions) *Session {
 
 	// Set default user agent
 	return &Session{
-		Header:    make(http.Header),
-		client:    client,
-		transport: transport,
+		Header:     make(http.Header),
+		client:     client,
+		transport:  transport,
 		middleware: make([]HandlerFunc, 0),
-		i: 0,
+		i:          0,
 	}
 }
 
