@@ -7,11 +7,6 @@ import (
 	"testing"
 )
 
-func TestNewRequest(t *testing.T) {
-	req := NewRequest().SetMethod(http.MethodGet).SetUrl("http://www.baidu.com")
-	t.Log(req)
-}
-
 func TestRequest_Copy(t *testing.T) {
 	asserts := assert.New(t)
 
@@ -31,7 +26,7 @@ func TestRequest_Copy(t *testing.T) {
 	p1 = fmt.Sprintf("%p", &req1.Id)
 	p2 = fmt.Sprintf("%p", &req2.Id)
 	asserts.NotEqual(p1, p2)
-	asserts.Equal(req1.Id, req2.Id)
+	asserts.NotEqual(req1.Id, req2.Id)
 
 	p1 = fmt.Sprintf("%p", req1.URL)
 	p2 = fmt.Sprintf("%p", req2.URL)
