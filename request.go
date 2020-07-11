@@ -59,6 +59,11 @@ func (req *Request) WithContext(ctx context.Context) *Request {
 	return req
 }
 
+// get context.Context for Request
+func (req *Request) Context() context.Context {
+	return req.ctx
+}
+
 // set request url
 func (req *Request) SetUrl(rawurl string) *Request {
 	u, err := url.Parse(rawurl)
