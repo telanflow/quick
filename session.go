@@ -344,6 +344,11 @@ func (session *Session) Do(req *http.Request) (*Response, error) {
 
 // send the request
 func transmission(session *Session, req *Request) (*Response, error) {
+	var (
+		ctx           context.Context
+		timeoutCancel context.CancelFunc
+	)
+
 	// Set timeout to request context.
 	// Default timeout is 30s.
 	timeout := time.Second * 30
@@ -352,7 +357,12 @@ func transmission(session *Session, req *Request) (*Response, error) {
 	} else if session.Timeout > 0 {
 		timeout = session.Timeout
 	}
-	ctx, timeoutCancel := context.WithTimeout(context.Background(), timeout)
+
+	if req.ctx == nil {
+		ctx, timeoutCancel = context.WithTimeout(context.Background(), timeout)
+	} else {
+		ctx, timeoutCancel = context.WithTimeout(req.ctx, timeout)
+	}
 
 	// set proxy to request context.
 	if req.Proxy != nil {

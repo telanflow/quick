@@ -2,6 +2,7 @@ package quick
 
 import (
 	"bytes"
+	"context"
 	"encoding/xml"
 	"github.com/telanflow/quick/encode"
 	"io"
@@ -28,10 +29,16 @@ type Request struct {
 	Cookies     Cookies       // request cookies
 
 	host string // customize the request Host field
+	ctx  context.Context
 }
 
 // create a request instance
 func NewRequest() *Request {
+	return NewRequestWithContext(nil)
+}
+
+// create a request instance with context.Context
+func NewRequestWithContext(ctx context.Context) *Request {
 	return &Request{
 		Id:          atomic.AddUint64(&sequenceNo, 1),
 		URL:         nil,
@@ -42,7 +49,14 @@ func NewRequest() *Request {
 		Timeout:     30 * time.Second,
 		Proxy:       nil,
 		Cookies:     nil,
+		ctx: 		 ctx,
 	}
+}
+
+// with context.Context for Request
+func (req *Request) WithContext(ctx context.Context) *Request {
+	req.ctx = ctx
+	return req
 }
 
 // set request url
@@ -299,5 +313,6 @@ func (req *Request) Copy() *Request {
 	newReq.Proxy 		= copyProxy
 	newReq.Cookies 		= copyCookies
 	newReq.host 		= req.host
+	newReq.ctx 			= req.ctx
 	return newReq
 }
