@@ -60,6 +60,13 @@ func OptionBody(v interface{}) OptionFunc {
 	}
 }
 
+// HTTP Basic Authentication
+func OptionBasicAuth(username, password string) OptionFunc {
+	return func(req *Request) {
+		req.SetBasicAuth(username, password)
+	}
+}
+
 // request body for post (FormData)
 func OptionBodyFormData(v interface{}) OptionFunc {
 	return func(req *Request) {
@@ -72,7 +79,7 @@ func OptionProxy(v interface{}) OptionFunc {
 	switch t := v.(type) {
 	case string:
 		return func(req *Request) {
-			req.SetProxy(t)
+			req.SetProxyUrl(t)
 		}
 	case *url.URL:
 		return func(req *Request) {

@@ -3,7 +3,9 @@ package quick
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/xml"
+	"errors"
 	"github.com/telanflow/quick/encode"
 	"io"
 	"net/http"
@@ -51,6 +53,30 @@ func NewRequestWithContext(ctx context.Context) *Request {
 		Cookies:     nil,
 		ctx: 		 ctx,
 	}
+}
+
+// Convert http.Request To Request
+func ConvertHttpRequest(r *http.Request) *Request {
+	// copy the URL
+	newURL, _ := CopyURL(r.URL)
+
+	// copy Cookies
+	var copyBody io.Reader
+	if r.Body != nil {
+		copyBody := new(bytes.Buffer)
+		_, _ = io.Copy(copyBody, r.Body)
+	}
+
+	// Generate a new request.Id
+	newReq := NewRequest()
+	newReq.URL 			= newURL
+	newReq.Method 		= r.Method
+	newReq.Header 		= CopyHeader(r.Header)
+	newReq.Body 		= copyBody
+	newReq.RedirectNum 	= DefaultRedirectNum
+	newReq.Timeout 		= 30 * time.Second
+	newReq.ctx 			= r.Context()
+	return newReq
 }
 
 // with context.Context for Request
@@ -115,6 +141,30 @@ func (req *Request) GetTimeout() time.Duration {
 func (req *Request) SetHost(host string) *Request {
 	req.host = host
 	return req
+}
+
+// BasicAuth returns the username and password provided in the request's
+// Authorization header, if the request uses HTTP Basic Authentication.
+// See RFC 2617, Section 2.
+func (r *Request) BasicAuth() (username, password string, ok bool) {
+	auth := r.Header.Get("Authorization")
+	if auth == "" {
+		return
+	}
+	return parseBasicAuth(auth)
+}
+
+// SetBasicAuth sets the request's Authorization header to use HTTP
+// Basic Authentication with the provided username and password.
+//
+// With HTTP Basic Authentication the provided username and password
+// are not encrypted.
+//
+// Some protocols may impose additional requirements on pre-escaping the
+// username and password. For instance, when used with OAuth2, both arguments
+// must be URL encoded first with url.QueryEscape.
+func (r *Request) SetBasicAuth(username, password string) {
+	r.Header.Set("Authorization", "Basic "+basicAuth(username, password))
 }
 
 // set GET parameters to request
@@ -242,13 +292,32 @@ func (req *Request) GetUserAgent() string {
 	return req.GetHeaderSingle("User-Agent")
 }
 
+// get proxy url for this request
+func (req *Request) GetProxyUrl() string {
+	if req.Proxy == nil {
+		return ""
+	}
+	return req.Proxy.String()
+}
+
 // set the proxy for this request
-// example: http://127.0.0.1:8080
-func (req *Request) SetProxy(rawurl string) *Request {
+// eg. "http://127.0.0.1:8080" "http://username:password@127.0.0.1:8080"
+func (req *Request) SetProxyUrl(rawurl string) *Request {
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		panic(err)
 	}
+	req.Proxy = u
+	return req
+}
+
+// get proxy url.URL for this request
+func (req *Request) GetProxyURL() *url.URL {
+	return req.Proxy
+}
+
+// set the proxy url for this request
+func (req *Request) SetProxyURL(u *url.URL) *Request {
 	req.Proxy = u
 	return req
 }
@@ -265,20 +334,8 @@ func (req *Request) SetCookies(cookies Cookies) *Request {
 
 // Copy request
 func (req *Request) Copy() *Request {
-	var copyURL *url.URL
-	if req.URL != nil {
-		copyURL = &url.URL{
-			Scheme:     req.URL.Scheme,
-			Opaque:     req.URL.Opaque,
-			User:       req.URL.User,
-			Host:       req.URL.Host,
-			Path:       req.URL.Path,
-			RawPath:    req.URL.RawPath,
-			ForceQuery: req.URL.ForceQuery,
-			RawQuery:   req.URL.RawQuery,
-			Fragment:   req.URL.Fragment,
-		}
-	}
+	// copy the URL
+	newURL, _ := CopyURL(req.URL)
 
 	var copyBody io.Reader
 	if req.Body != nil {
@@ -286,20 +343,8 @@ func (req *Request) Copy() *Request {
 		_, _ = io.Copy(copyBody, req.Body)
 	}
 
-	var copyProxy *url.URL
-	if req.Proxy != nil {
-		copyProxy = &url.URL{
-			Scheme:     req.Proxy.Scheme,
-			Opaque:     req.Proxy.Opaque,
-			User:       req.Proxy.User,
-			Host:       req.Proxy.Host,
-			Path:       req.Proxy.Path,
-			RawPath:    req.Proxy.RawPath,
-			ForceQuery: req.Proxy.ForceQuery,
-			RawQuery:   req.Proxy.RawQuery,
-			Fragment:   req.Proxy.Fragment,
-		}
-	}
+	// copy the proxy url
+	copyProxy, _ := CopyURL(req.Proxy)
 
 	var copyCookies Cookies
 	if req.Cookies != nil {
@@ -309,7 +354,7 @@ func (req *Request) Copy() *Request {
 
 	// Generate a new request.Id
 	newReq := NewRequest()
-	newReq.URL 			= copyURL
+	newReq.URL 			= newURL
 	newReq.Method 		= req.Method
 	newReq.Header 		= CopyHeader(req.Header)
 	newReq.Body 		= copyBody
@@ -320,4 +365,62 @@ func (req *Request) Copy() *Request {
 	newReq.host 		= req.host
 	newReq.ctx 			= req.ctx
 	return newReq
+}
+
+// copy url.URL
+func CopyURL(u *url.URL) (URL *url.URL, err error) {
+	if u == nil {
+		err = errors.New("copy url.URL is nil")
+		return
+	}
+
+	// copy basic authentication username,password
+	var user *url.Userinfo
+	if u.User != nil {
+		password, _ := u.User.Password()
+		user = url.UserPassword(u.User.Username(), password)
+	}
+
+	URL = &url.URL{
+		Scheme:     u.Scheme,
+		Opaque:     u.Opaque,
+		User:       user,
+		Host:       u.Host,
+		Path:       u.Path,
+		RawPath:    u.RawPath,
+		ForceQuery: u.ForceQuery,
+		RawQuery:   u.RawQuery,
+		Fragment:   u.Fragment,
+	}
+	return
+}
+
+// parseBasicAuth parses an HTTP Basic Authentication string.
+// "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" returns ("Aladdin", "open sesame", true).
+func parseBasicAuth(auth string) (username, password string, ok bool) {
+	const prefix = "Basic "
+	// Case insensitive prefix match. See Issue 22736.
+	if len(auth) < len(prefix) || !strings.EqualFold(auth[:len(prefix)], prefix) {
+		return
+	}
+	c, err := base64.StdEncoding.DecodeString(auth[len(prefix):])
+	if err != nil {
+		return
+	}
+	cs := string(c)
+	s := strings.IndexByte(cs, ':')
+	if s < 0 {
+		return
+	}
+	return cs[:s], cs[s+1:], true
+}
+
+// See 2 (end of page 4) https://www.ietf.org/rfc/rfc2617.txt
+// "To receive authorization, the client sends the userid and password,
+// separated by a single colon (":") character, within a base64
+// encoded string in the credentials."
+// It is not meant to be urlencoded.
+func basicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
 }

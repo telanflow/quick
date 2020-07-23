@@ -14,7 +14,7 @@ func TestRequest_Copy(t *testing.T) {
 	req1.SetUrl("http://example.com:8080")
 	req1.SetMethod(http.MethodGet)
 	req1.SetHeaderSingle("User-Agent", "quick")
-	req1.SetProxy("http://127.0.0.1:8080")
+	req1.SetProxyUrl("http://127.0.0.1:8080")
 	req1.SetCookies(NewCookiesWithString("sessionid=2222222"))
 
 	req2 := req1.Copy()

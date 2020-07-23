@@ -188,12 +188,31 @@ func (session *Session) GetUserAgent() string {
 	return session.GetHeaderSingle("User-Agent")
 }
 
+// get session global proxy url
+func (session *Session) GetProxyUrl() string {
+	if session.Proxy == nil {
+		return ""
+	}
+	return session.Proxy.String()
+}
+
 // set session global proxy url
-func (session *Session) SetProxy(rawurl string) *Session {
+func (session *Session) SetProxyUrl(rawurl string) *Session {
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		panic(err)
 	}
+	session.Proxy = u
+	return session
+}
+
+// get session global proxy url
+func (session *Session) GetProxyURL() *url.URL {
+	return session.Proxy
+}
+
+// set session global proxy url
+func (session *Session) SetProxyURL(u *url.URL) *Session {
 	session.Proxy = u
 	return session
 }

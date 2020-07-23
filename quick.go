@@ -104,9 +104,24 @@ func GetUserAgent() string {
 	return defaultSession.GetHeaderSingle("User-Agent")
 }
 
+// get session global proxy url
+func GetProxyUrl() string {
+	return defaultSession.GetProxyUrl()
+}
+
 // set global proxy url
-func SetProxy(rawurl string) *Session {
-	return defaultSession.SetProxy(rawurl)
+func SetProxyUrl(rawurl string) *Session {
+	return defaultSession.SetProxyUrl(rawurl)
+}
+
+// get session global proxy url
+func GetProxyURL() *url.URL {
+	return defaultSession.GetProxyURL()
+}
+
+// set global proxy url
+func SetProxyURL(u *url.URL) *Session {
+	return defaultSession.SetProxyURL(u)
 }
 
 // set global request timeout
