@@ -48,13 +48,14 @@ func main() {
     // request
     resp, err := quick.Get(
         "http://example.com?bb=1", 
-        quick.OptionQueryString("name=quick&aa=11"), // set Get params   eg. "example.com?bb=1&name=quick&aa=11"
-        quick.OptionHeaderSingle("User-Agent", ""),  // set http header
-        quick.OptionHeader(http.Header{}),           // set http header  eg. http.Header || map[string]string || []string
-        quick.OptionRedirectNum(10),                 // set redirect num
-        quick.OptionCookies(cookies),                // set cookies to request
+        quick.OptionQueryString("name=quick&aa=11"),   // set Get params   eg. "example.com?bb=1&name=quick&aa=11"
+        quick.OptionHeaderSingle("User-Agent", ""),    // set http header
+        quick.OptionHeader(http.Header{}),             // set http header  eg. http.Header || map[string]string || []string
+        quick.OptionRedirectNum(10),                   // set redirect num
+        quick.OptionCookies(cookies),                  // set cookies to request
         // quick.OptionProxy("http://127.0.0.1:8080"), // set proxy address
         // quick.OptionBody(""),                       // POST body
+        // quick.OptionBasicAuth("username", "password"), // HTTP Basic Authentication
         // ... quick.Option
     )
     if err != nil {
