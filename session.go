@@ -416,7 +416,7 @@ func transmission(session *Session, req *Request) (*Response, error) {
 	}
 
 	// merge request header and session header
-	httpRequest.Header = MergeHeaders(session.Header, httpRequest.Header)
+	httpRequest.Header = MergeHeaders(session.Header, req.Header)
 
 	// middleware
 	session.next(httpRequest)
