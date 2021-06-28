@@ -426,6 +426,11 @@ func transmission(session *Session, req *Request) (*Response, error) {
 
 	// do request
 	httpResponse, err := session.client.Do(httpRequest)
+	defer func() {
+		if httpResponse != nil && httpResponse.Body != nil {
+			_ = httpResponse.Body.Close()
+		}
+	}()
 
 	if err != nil {
 		// check timeout error
@@ -434,11 +439,6 @@ func transmission(session *Session, req *Request) (*Response, error) {
 		}
 		return nil, WrapErr(err, "Request Error")
 	}
-	defer func() {
-		if err := httpResponse.Body.Close(); err != nil {
-			panic(err)
-		}
-	}()
 
 	resp, err := BuildResponse(httpResponse)
 	if err != nil {
