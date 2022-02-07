@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// mergeHeaders merge Request headers and Session Headers.
+// MergeHeaders merge Request headers and Session Headers.
 // Request has higher priority.
 func MergeHeaders(h1, h2 http.Header) http.Header {
 	h := http.Header{}
@@ -23,7 +23,7 @@ func MergeHeaders(h1, h2 http.Header) http.Header {
 	return h
 }
 
-// copy headers
+// CopyHeader copy headers
 func CopyHeader(h http.Header) http.Header {
 	h2 := make(http.Header, len(h))
 	for k, vv := range h {
@@ -34,7 +34,7 @@ func CopyHeader(h http.Header) http.Header {
 	return h2
 }
 
-// Get request merge url and query string encode.
+// MergeQueryString Get request merge url and query string encode.
 func MergeQueryString(parsedURL *url.URL, parsedQuery string) (*url.URL, error) {
 	value1 := parsedURL.Query()
 	value2, err := url.ParseQuery(parsedQuery)
@@ -50,7 +50,7 @@ func MergeQueryString(parsedURL *url.URL, parsedQuery string) (*url.URL, error) 
 	return parsedURL, nil
 }
 
-// Get request replace url and query string encode.
+// ReplaceQueryString Get request replace url and query string encode.
 func ReplaceQueryString(parsedURL *url.URL, parsedQuery string) (*url.URL, error) {
 	rawurl := strings.Join([]string{strings.Replace(parsedURL.String(), "?"+parsedURL.RawQuery, "", -1), parsedQuery}, "?")
 	u, err := url.Parse(rawurl)

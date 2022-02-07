@@ -1,6 +1,7 @@
 package quick
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -71,4 +72,27 @@ func TestSession_Post(t *testing.T) {
 	}
 
 	asserts.Equal(resp.StatusCode, 200)
+}
+
+func TestSession_SetBaseURL(t *testing.T) {
+	session := NewSession().SetBaseURL("https://httpbin.org/")
+
+	resp, err := session.Get("/get?a=1#12")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp.Status)
+
+	req, _ := http.NewRequest("GET", "/get?a=1#12", nil)
+	resp, err = session.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(resp)
+}
+
+func TestSession_EnableTrace(t *testing.T) {
+	session := NewSession()
+	resp, _ := session.EnableTrace().Get("https://httpbin.org/get")
+	fmt.Println(resp.TraceInfo())
 }

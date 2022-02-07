@@ -57,9 +57,9 @@ func main() {
 	cookies := quick.NewCookiesWithString("sessionid=11111")
 
 	// request
-	resp, err := quick.Get(
-		"http://www.baidu.com?bb=1",
-		quick.OptionQueryString("name=quick&aa=11"),   // set Get params   eg. "example.com?bb=1&name=quick&aa=11"
+	resp, err := quick.EnableTrace().Get(
+		"https://httpbin.org/get?bb=1",
+		quick.OptionQueryString("name=quick&aa=11"), // set Get params   eg. "example.com?bb=1&name=quick&aa=11"
 		//quick.OptionProxy("http://127.0.0.1:8080"),  // set proxy
 		//quick.OptionHeaderSingle("User-Agent", ""),  // set http header
 		//quick.OptionHeader(http.Header{}),           // set http header  eg. http.Header || map[string]string || []string
@@ -75,4 +75,5 @@ func main() {
 
 	fmt.Println(resp.StatusCode)
 	fmt.Println(resp.ExecTime)
+	fmt.Println(resp.TraceInfo())
 }

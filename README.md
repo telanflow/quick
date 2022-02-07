@@ -107,6 +107,7 @@ func main() {
 
     // send Request
     session := quick.NewSession()
+	session.EnableTrace() // trace
     resp, err := session.Suck(
         req, 
         quick.OptionHeaderSingle("User-Agent", ""), // set http header
@@ -116,10 +117,18 @@ func main() {
         panic(err)
     }
 
-    //resp.Status       e.g. "200 OK"
-    //resp.StatusCode   e.g. 200
-    //... 
+    // resp.Status       e.g. "200 OK"
+    // resp.StatusCode   e.g. 200
+    // ...
+    // 
+    // TraceInfo:
+    //      DNSLookup: 4ms
+    //      ConnTime: 1230ms
+    //      TCPConnTime: 405ms
+    //      TLSHandshake: 819ms
+    //      ServerTime: 299ms
     fmt.Println(resp)
+    fmt.Println(resp.TraceInfo())
 }
 ```
 
