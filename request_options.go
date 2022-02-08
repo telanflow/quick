@@ -60,17 +60,38 @@ func OptionBody(v interface{}) OptionFunc {
 	}
 }
 
-// OptionBasicAuth HTTP Basic Authentication
-func OptionBasicAuth(username, password string) OptionFunc {
-	return func(req *Request) {
-		req.SetBasicAuth(username, password)
-	}
-}
-
 // OptionBodyFormData request body for post (FormData)
 func OptionBodyFormData(v interface{}) OptionFunc {
 	return func(req *Request) {
 		req.SetBodyFormData(v)
+	}
+}
+
+// OptionBodyXWwwFormUrlencoded set request body x-www-form-urlencoded
+func OptionBodyXWwwFormUrlencoded(v interface{}) OptionFunc {
+	return func(req *Request) {
+		req.SetBodyXWwwFormUrlencoded(v)
+	}
+}
+
+// OptionBodyJSON request body for post
+func OptionBodyJSON(v interface{}) OptionFunc {
+	return func(req *Request) {
+		req.SetBodyJson(v)
+	}
+}
+
+// OptionBodyXML request body for post
+func OptionBodyXML(v interface{}) OptionFunc {
+	return func(req *Request) {
+		req.SetBodyXML(v)
+	}
+}
+
+// OptionBasicAuth HTTP Basic Authentication
+func OptionBasicAuth(username, password string) OptionFunc {
+	return func(req *Request) {
+		req.SetBasicAuth(username, password)
 	}
 }
 

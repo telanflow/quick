@@ -307,7 +307,8 @@ func (req *Request) SetBodyJson(params interface{}) *Request {
 	return req
 }
 
-func (req *Request) SetBodyXml(params interface{}) *Request {
+// SetBodyXML set POST body (RAW) to request
+func (req *Request) SetBodyXML(params interface{}) *Request {
 	buff, err := xml.Marshal(params)
 	if err != nil {
 		panic(err)
@@ -317,6 +318,7 @@ func (req *Request) SetBodyXml(params interface{}) *Request {
 	return req
 }
 
+// SetBodyXWwwFormUrlencoded set request body x-www-form-urlencoded
 func (req *Request) SetBodyXWwwFormUrlencoded(params interface{}) *Request {
 	req.SetHeaderSingle("Content-Type", "application/x-www-form-urlencoded")
 	return req.SetBody(params)
