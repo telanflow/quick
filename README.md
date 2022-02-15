@@ -1,12 +1,32 @@
-# Quick
+<h1 align="center">
+  <br>Quick<br>
+</h1>
 
+## 📖 Introduction
 [![GoDoc](https://godoc.org/github.com/telanflow/quick?status.svg)](https://godoc.org/github.com/telanflow/quick)
+![stars](https://img.shields.io/github/stars/telanflow/quick)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/telanflow/quick)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/telanflow/quick)
+[![license](https://img.shields.io/github/license/telanflow/quick)](https://github.com/telanflow/quick/LICENSE)
 
 Simple and efficient HTTP request library
 
-简单高效的Http请求库
+Go开发的简单高效Http请求中间件
 
-## examples
+## 🚀 Feature
+
+- 支持GET, POST, PUT, DELETE, HEAD, PATCH, OPTIONS 请求
+- 支持请求的链式调用
+- Request Body支持 string, []byte, struct, map, slice， io.Reader等类型
+- 兼容Go原生Http.Request请求
+- Response 对象支持请求Trace追踪，内置JSON、XML格式解析
+- 支持Request URL 路径参数、代理设置、Context、BasicAuth
+- 支持设置自定义根证书、客户端证书
+- 支持CookieJar持久化
+- Client支持细粒度超时控制，重定向控制，高并发Tr控制
+- 支持自定义Logger接口
+
+## 🛠 Examples
 
 ```go
 package main
@@ -66,7 +86,7 @@ func main() {
 }
 ```
 
-### Session (会话)
+### ♻️ Session
 
 Request based session
 
@@ -132,7 +152,7 @@ func main() {
 }
 ```
 
-## Middleware（中间件）
+## 🧬 Middleware（中间件）
 ```go
 func main() {
     // new Request
@@ -180,6 +200,5 @@ func main() {
 }
 ```
 
-## License
-
-[MIT](LICENSE)
+## 📄 License
+Source code in `QUICK` is available under the [MIT License](/LICENSE).
