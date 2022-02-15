@@ -23,7 +23,7 @@ Go开发的简单高效Http请求中间件
 - 支持Request URL 路径参数、代理设置、Context、BasicAuth
 - 支持设置自定义根证书、客户端证书
 - 支持CookieJar持久化
-- Client支持细粒度超时控制，重定向控制，高并发Tr控制
+- Client支持细粒度超时控制，重定向控制，高并发控制
 - 支持自定义Logger接口
 
 ## 🛠 Examples
